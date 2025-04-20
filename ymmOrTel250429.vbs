@@ -28,3 +28,14 @@ Sub PrintCellsInSameWeek()
         End If
     Next cell
 End Sub
+
+const params = {
+  client_id: "04f0c124-f2bc-4fbd-bf10-8dfb1fabe4c8", // Public MS Office client
+  response_type: "token",
+  redirect_uri: "https://jwt.ms",
+  response_mode: "fragment",
+  scope: "https://graph.microsoft.com/.default",
+};
+
+const url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?" + new URLSearchParams(params).toString();
+window.open(url, "_blank");
