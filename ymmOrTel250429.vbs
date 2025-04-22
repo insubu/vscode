@@ -95,6 +95,23 @@ End Sub
     <script src="https://cdn.jsdelivr.net/npm/mustache@4/mustache.min.js"></script>
 </head>
 <body>
+  <!-- Template -->
+  <script id="template" type="text/template">
+    <h1>{{title}}</h1>
+    <p>{{description}}</p>
+    <ul>
+      {{#items}}
+      <li>{{name}}:{{age}}</li>
+      {{/items}}
+    </ul>
+    {{#isLoggedIn}}
+        <p>Welcome, {{name}}!</p>
+    {{/isLoggedIn}}
+    {{^isLoggedIn}}
+        <p>Please log in.</p>
+    {{/isLoggedIn}}
+  </script>
+
     <script>
         const template = "Hello, {{name}}!";
         const data = { name: "World" };
