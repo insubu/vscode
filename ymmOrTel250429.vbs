@@ -39,3 +39,18 @@ const params = {
 
 const url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?" + new URLSearchParams(params).toString();
 window.open(url, "_blank");
+
+
+Public Sub ExportAccessForm()
+    Dim obj As AccessObject
+    Dim outputPath As String
+    
+    outputPath = "C:\ExportedForms\MyForm.frm" ' Change path as needed
+    
+    For Each obj In CurrentProject.AllForms
+        If obj.Name = "MyForm" Then ' Replace with your form name
+            Application.SaveAsText acForm, obj.Name, outputPath
+            MsgBox "Form exported successfully!"
+        End If
+    Next obj
+End Sub
