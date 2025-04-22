@@ -85,3 +85,21 @@ End Sub
   </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mustache.js Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/mustache@4/mustache.min.js"></script>
+</head>
+<body>
+    <script>
+        const template = "Hello, {{name}}!";
+        const data = { name: "World" };
+        const rendered = Mustache.render(template, data);
+        console.log(rendered); // Output: "Hello, World!"
+    </script>
+</body>
+</html>
