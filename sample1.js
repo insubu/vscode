@@ -42,53 +42,22 @@ end;
 
 DFM File
 object Form1: TForm1
-  Caption = 'TStackPanel Example'
-  ClientHeight = 300
-  ClientWidth = 400
-  object StackPanel1: TStackPanel
-    Align = alClient
-    Orientation = orVertical
-    Padding.Left = 10
-    Padding.Top = 10
-    Padding.Right = 10
-    Padding.Bottom = 10
-    Margins.Left = 5
-    Margins.Top = 5
-    Margins.Right = 5
-    Margins.Bottom = 5
-    object Button1: TButton
-      Caption = 'Button 1'
-    end
-    object Button2: TButton
-      Caption = 'Button 2'
-    end
-    object Button3: TButton
-      Caption = 'Button 3'
-    end
+  Left = 1247
+  Top = 496
+  Caption = 'SetParameterGenerator'
+  ClientHeight = 182
+  ClientWidth = 284
+  object rdgExistSection: TRadioGroup
+    Left = 8
+    Height = 60
+    Hint = '既に存在するSetParameterGeneratorセクションの扱いを設定します'
+    Top = 8
+    Width = 152
+    Caption = '既存のセクション'
+    ItemIndex = 0
+    Items.Strings = (
+      'コメントアウトする'
+      '上書きする'
+    )
+    TabOrder = 1
   end
-end
-
-pas File
-unit Unit1;
-
-interface
-
-uses
-  Vcl.Forms, Vcl.Controls, Vcl.ExtCtrls, Vcl.StdCtrls;
-
-type
-  TForm1 = class(TForm)
-    StackPanel1: TStackPanel;
-    Button1: TButton;
-    Button2: TButton;
-    Button3: TButton;
-  end;
-
-var
-  Form1: TForm1;
-
-implementation
-
-{$R *.dfm}
-
-end.
