@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.WinForms;
 using Microsoft.Web.WebView2.Core;
@@ -11,29 +12,45 @@ class WebView2FormApp
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        // Create the form
-        Form mainForm = new Form
+        Form form = new Form
         {
-            Text = "WebView2 Sample",
-            Width = 1000,
-            Height = 700
+            Text = "WebView2 C# <-> JavaScript Example",
+            Width = 800,
+            Height = 600
         };
 
-        // Create the WebView2 control
-        var webView = new WebView2
+        Button sendButton = new Button
+        {
+            Text = "Send Date to WebView2",
+            Dock = DockStyle.Top,
+            Height = 40
+        };
+
+        WebView2 webView = new WebView2
         {
             Dock = DockStyle.Fill
         };
 
-        // Add the WebView2 to the form
-        mainForm.Controls.Add(webView);
+        form.Controls.Add(webView);
+        form.Controls.Add(sendButton);
 
-        // Initialize WebView2
-        webView.CoreWebView2InitializationCompleted += (s, e) =>
+        webView.CoreWebView2InitializationCompleted += async (s, e) =>
         {
             if (e.IsSuccess)
             {
-                webView.CoreWebView2.Navigate("https://www.example.com");
+                // Listen for messages from JavaScript
+                webView.CoreWebView2.WebMessageReceived += (sender, args) =>
+                {
+                    string msg = args.TryGetWebMessageAsString();
+                    MessageBox.Show("Received from JavaScript: " + msg);
+                };
+
+                // Load HTML content directly from C#
+                string html = GenerateHtml();
+                string htmlBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(html));
+                webView.CoreWebView2.Navigate("data:text/html;base64," + htmlBase64);
+                webView.CoreWebView2.OpenDevToolsWindow();
+
             }
             else
             {
@@ -41,9 +58,46 @@ class WebView2FormApp
             }
         };
 
-        webView.EnsureCoreWebView2Async();
+        // Send date from C# to JavaScript
+        sendButton.Click += async (s, e) =>
+        {
+            string today = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            await webView.CoreWebView2.ExecuteScriptAsync($"updateDateFromHost('{today}')");
+        };
 
-        // Run the form
-        Application.Run(mainForm);
+        webView.EnsureCoreWebView2Async();
+        Application.Run(form);
+    }
+
+    static string GenerateHtml()
+    {
+        return @"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <title>WebView2 HTML</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #dateDisplay { margin-top: 20px; color: green; }
+    </style>
+</head>
+<body>
+    <h1>JavaScript ↔ C# Communication</h1>
+    <button onclick='sendDateToHost()'>Send Current Date to C#</button>
+    <div id='dateDisplay'>No data yet.</div>
+
+    <script>
+        function sendDateToHost() {
+            const now = new Date().toISOString();
+            window.chrome.webview.postMessage(now);
+        }
+
+        function updateDateFromHost(dateStr) {
+            document.getElementById('dateDisplay').innerText = 'Received from C#: ' + dateStr;
+        }
+    </script>
+</body>
+</html>";
     }
 }
