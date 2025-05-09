@@ -1,22 +1,10 @@
-# Define file paths
-$file = "t.sql"
-$backup = "t.sql.bk"
-$replacement = "C.txt"
-$newFile = "t.sql"
+$filePath = "C:\path\to\your\file.txt"
 
-# Backup the original file
-Copy-Item $file $backup
+# Read file content into an array
+$lines = Get-Content $filePath
 
-# Read file content
-$content = Get-Content $file
+# Insert "xxxx" before line 3
+$lines = $lines[0..1] + "xxxx" + $lines[2..($lines.Length - 1)]
 
-# Extract the required parts
-$A = $content[0..11]  # First 12 lines
-$B = $content[27..($content.Length-1)]  # From line 28 to end
-$C = Get-Content $replacement  # Load replacement text
-
-# Create new file with updated content
-$A + $C + $B | Set-Content $newFile
-
-Write-Host "File processed successfully!"
-
+# Write modified content back to the file
+$lines | Set-Content $filePath
